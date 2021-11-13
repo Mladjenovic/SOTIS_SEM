@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Form, Input, Select, Button } from "antd";
+import { Form, Input, Select, Button, Radio } from "antd";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -135,6 +135,13 @@ const RegisterScreen = () => {
         ]}
       >
         <Input.Password />
+      </Form.Item>
+
+      <Form.Item name="userType" label="Radio.Group">
+        <Radio.Group>
+          <Radio value="student">student</Radio>
+          <Radio value="teacher">teacher</Radio>
+        </Radio.Group>
       </Form.Item>
 
       <Form.Item {...tailFormItemLayout}>

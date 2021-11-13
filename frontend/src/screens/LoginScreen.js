@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { login } from "../actions/userActions";
 
 const LoginScreen = () => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const dispatch = useDispatch();
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    dispatch(login(values.username, values.password));
   };
 
   return (
@@ -51,7 +61,7 @@ const LoginScreen = () => {
         <Button type="primary" htmlType="submit" className="login-form-button">
           Log in
         </Button>
-        Or <a href="">register now!</a>
+        Or <Link to="/register">register now!</Link>
       </Form.Item>
     </Form>
   );
