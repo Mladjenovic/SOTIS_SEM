@@ -15,14 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomRegisterSerializer(RegisterSerializer):
     is_student = serializers.BooleanField()
     is_teacher = serializers.BooleanField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
     
     class Meta: 
         model = User
-        fields = ('email', 'username', 'password', 'is_student', 'is_teacher')
+        fields = ('first_name', 'last_name', 'email', 'username', 'password', 'is_student', 'is_teacher')
 
     def get_cleaned_data(self):
         return {
             'username' : self.validated_data.get('username', ''),
+            'first_name' : self.validated_data.get('first_name'),
+            'last_name' : self.validated_data.get('last_name'),
             'password1' : self.validated_data.get('password1', ''),
             'password2' : self.validated_data.get('password2', ''),
             'email' : self.validated_data.get('email'),
