@@ -34,8 +34,15 @@ def registerUser(request):
             is_student=True if (data['userType'] == 'student') else False,
             is_teacher=True if (data['userType'] == 'teacher') else False
         )
+        
+        if(user.is_student): 
+            student = Student.objects.create(user=user, avgGrade=data['avgGrade'])
+        
 
         serializer = CustomRegisterSerializer(user, many=False)
+        
+        
+        
         return Response(serializer.data)
     except:
         message = {'detail': 'Couldn\'t register user'}
