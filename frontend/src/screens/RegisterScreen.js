@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { register } from "../actions/userActions";
 
 import { Form, Input, Select, Button, Radio } from "antd";
 const { Option } = Select;
@@ -37,8 +40,20 @@ const tailFormItemLayout = {
 const RegisterScreen = () => {
   const [form] = Form.useForm();
 
+  const dispatch = useDispatch();
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    dispatch(
+      register(
+        values.firstname,
+        values.lastname,
+        values.username,
+        values.email,
+        values.password,
+        values.userType
+      )
+    );
   };
 
   return (
@@ -73,6 +88,21 @@ const RegisterScreen = () => {
           {
             required: true,
             message: "Please input your last name!",
+            whitespace: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="username"
+        label="Username"
+        tooltip="Enter your username!"
+        rules={[
+          {
+            required: true,
+            message: "Please input your username!",
             whitespace: true,
           },
         ]}

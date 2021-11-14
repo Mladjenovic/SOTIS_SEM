@@ -48,32 +48,29 @@ function CustomLayout() {
           </Menu.Item>
 
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="2">Tom</Menu.Item>
-            <Menu.Item key="3">Bill</Menu.Item>
-            <Menu.Item key="4">Alex</Menu.Item>
+            {userInfo ? (
+              <Menu.Item key="2" icon={<LoginOutlined />}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </Button>
+              </Menu.Item>
+            ) : (
+              <Menu.Item key="2" disabled>
+                <p></p>
+              </Menu.Item>
+            )}
           </SubMenu>
-          <Menu.Item key="5" icon={<LoginOutlined />}>
+          <Menu.Item key="3" icon={<LoginOutlined />}>
             <Link to="/login/">Login</Link>
           </Menu.Item>
-          <Menu.Item key="6" icon={<UserAddOutlined />}>
+          <Menu.Item key="4" icon={<UserAddOutlined />}>
             <Link to="/register/">Register</Link>
           </Menu.Item>
-          {userInfo ? (
-            <Menu.Item key="7" icon={<LoginOutlined />}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                onClick={logoutHandler}
-              >
-                Logout
-              </Button>
-            </Menu.Item>
-          ) : (
-            <Menu.Item key="7" disabled>
-              <p></p>
-            </Menu.Item>
-          )}
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -81,7 +78,9 @@ function CustomLayout() {
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {userInfo ? userInfo.username : "No user"}
+            </Breadcrumb.Item>
           </Breadcrumb>
           <div
             className="site-layout-background"

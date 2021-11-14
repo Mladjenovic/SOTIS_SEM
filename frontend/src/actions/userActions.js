@@ -42,42 +42,53 @@ export const logout = () => (dispatch) => {
   dispatch({ type: actions.USER_LOGOUT });
 };
 
-export const register = (name, email, password) => async (dispatch) => {
-  try {
-    dispatch({
-      type: actions.USER_REGISTER_REQUEST,
-    });
+export const register =
+  (firstname, lastname, username, email, password, userType) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: actions.USER_REGISTER_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-    const { data } = await axios.post(
-      "/api/users/register/",
-      { name: name, email: email, password: password },
-      config
-    );
+      const user = {
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        email: email,
+        password: password,
+        userType: userType,
+      };
 
-    dispatch({
-      type: actions.USER_REGISTER_SUCCESS,
-      payload: data,
-    });
+      const { data } = await axios.post(
+        "http://localhost:8000/api/users/register/",
+        user,
+        config
+      );
 
-    dispatch({
-      type: actions.USER_LOGIN_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: actions.USER_REGISTER_SUCCESS,
+        payload: data,
+      });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: actions.USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: actions.USER_LOGIN_SUCCESS,
+        payload: data,
+      });
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: actions.USER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };

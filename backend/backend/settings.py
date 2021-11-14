@@ -156,13 +156,14 @@ AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 CSRF_COOKIE_NAME = "csfrtoken"
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = False
