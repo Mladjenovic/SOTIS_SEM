@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from .models import User, Student
+from .models import User, Student, Teacher
 from .serializers import  UserSerializer, CustomRegisterSerializer
 
 from django.contrib.auth.hashers import make_password
@@ -46,6 +46,7 @@ def registerUser(request):
         
         return Response(serializer.data)
     except:
+        print("Hello2")
         message = {'detail': 'Couldn\'t register user'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
     
