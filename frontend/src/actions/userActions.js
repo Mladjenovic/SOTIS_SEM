@@ -15,7 +15,7 @@ export const login = (username, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "/rest-auth/login/",
+      "http://localhost:8000/api/users/login/",
       { username: username, password: password },
       config
     );
