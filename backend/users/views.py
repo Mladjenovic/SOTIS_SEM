@@ -1,10 +1,11 @@
+import json
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from .models import User, Student, Teacher
-from .serializers import  UserSerializer, CustomRegisterSerializer
+from .serializers import  UserSerializer, CustomRegisterSerializer, SubjectSerializer
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
@@ -13,41 +14,33 @@ from rest_framework import status
 from rest_framework import viewsets
 from django.shortcuts import render
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Student
+from .serializers import UserSerializer, StudentSerializer
 
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
 
 
 @api_view(['POST'])
 def registerUser(request):
     data = request.data
     try:
-        user = User.objects.create(
-            first_name=data['firstname'],
-            last_name=data['lastname'],
-            username=data['username'],
-            email=data['email'],
-            password=make_password(data['password']), 
-            is_student=True if (data['userType'] == 'student') else False,
-            is_teacher=True if (data['userType'] == 'teacher') else False
-        )
-        
-        if(user.is_student): 
-            student = Student.objects.create(user=user)
-        elif(user.is_teacher): 
-            teacher = Teacher.objects.create(user=user)
-
-        serializer = CustomRegisterSerializer(user, many=False)
-        
+        serializer = StudentSerializer(data=data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                
+                # crypt password
+                createdUser = User.objects.get(username=data['user']['username'])
+                createdUser.password = make_password(createdUser.password)
+                createdUser.save()
+            except Exception as e:
+                print(str(e))
+        else:
+            message = {'detail': serializer.error}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+           
         return Response(serializer.data)
-    except:
-        print("Hello2")
-        message = {'detail': 'Couldn\'t register user'}
+    except Exception as e:
+        message = {'detail': serializer.errors}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
@@ -58,10 +51,13 @@ def loginUser(request):
         check_if_user_exists = User.objects.filter(username=data.get('username')).exists()
         print(check_if_user_exists)
         if check_if_user_exists:
-            user = authenticate(request, username=data.get('username'), password=(data.get('password')))
+            try:
+                user = authenticate(request, username=data.get('username'), password=(data.get('password')))
+            except Exception as e:
+                print(str(e))
             if user is not None:
                 # this user is valid, do what you want to do
-                serializer = CustomRegisterSerializer(user, many=False)
+                serializer = UserSerializer(user, many=False)
                 return Response(serializer.data)
             else:
                 # this user is not valid, he provided wrong password, show some error message
@@ -73,6 +69,35 @@ def loginUser(request):
             return Response(message, status=status.HTTP_204_NO_CONTENT)
     except:
         message = {'detail': 'Couldn\'t login user'}
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['GET'])
+def getUsers(request):
+    if request.method == 'GET':
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+def subjectView(request):
+    data = request.data
+    try:
+        serializer = SubjectSerializer(data=data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+            except Exception as e:
+                print(str(e))
+        else:
+            message = {'detail': serializer.error}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+           
+        return Response(serializer.data)
+    except Exception as e:
+        message = {'detail': serializer.errors}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 

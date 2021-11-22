@@ -13,7 +13,8 @@ class User(AbstractUser):
 
 
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
+    average_grade = models.IntegerField(default=5, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.user.username
@@ -25,3 +26,12 @@ class Teacher(models.Model):
     def __str__(self) -> str:
         return self.user.username
 
+
+class Subject(models.Model):
+    student = models.ManyToManyField(Student, related_name="student")
+    title = models.CharField(max_length=200, null=False)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    # test = tu ne ide nista ali postoji
+
+    def __str__(self):
+        return self.title

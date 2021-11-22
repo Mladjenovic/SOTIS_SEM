@@ -57,13 +57,18 @@ export const register =
       };
 
       const user = {
-        firstname: firstname,
-        lastname: lastname,
-        username: username,
-        email: email,
-        password: password,
-        userType: userType,
+        user: {
+          firstname: firstname,
+          lastname: lastname,
+          username: username,
+          email: email,
+          password: password,
+          is_student: userType == "student" ? "True" : "False",
+          is_teacher: userType == "teacher" ? "True" : "False",
+        },
       };
+
+      console.log(user);
 
       const { data } = await axios.post(
         "http://localhost:8000/api/users/register/",

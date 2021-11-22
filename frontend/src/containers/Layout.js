@@ -12,6 +12,8 @@ import RegisterScreen from "../screens/RegisterScreen";
 
 import {
   LoginOutlined,
+  PlusOutlined,
+  LeftOutlined,
   UserAddOutlined,
   HomeOutlined,
   UserOutlined,
@@ -65,12 +67,20 @@ function CustomLayout() {
               </Menu.Item>
             )}
           </SubMenu>
+
           <Menu.Item key="3" icon={<LoginOutlined />}>
             <Link to="/login/">Login</Link>
           </Menu.Item>
           <Menu.Item key="4" icon={<UserAddOutlined />}>
             <Link to="/register/">Register</Link>
           </Menu.Item>
+          {userInfo && userInfo.is_teacher ? (
+            <Menu.Item key="5" icon={<PlusOutlined />}>
+              <Link to="/make-test/">Make test</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
         </Menu>
       </Sider>
       <Layout className="site-layout">
