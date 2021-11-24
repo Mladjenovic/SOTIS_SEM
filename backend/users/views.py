@@ -4,18 +4,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from .models import User, Student, Teacher
-from .serializers import  UserSerializer, CustomRegisterSerializer, SubjectSerializer
-
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
+from django.core.exceptions import *
 from rest_framework import status
 
 from rest_framework import viewsets
 from django.shortcuts import render
 
-from .models import User, Student
-from .serializers import UserSerializer, StudentSerializer
+from .models import User, Student, Teacher, Subject
+from .serializers import UserSerializer, StudentSerializer, SubjectSerializer
 
 
 
@@ -80,6 +78,18 @@ def getUsers(request):
         return Response(serializer.data)
 
 
+@api_view(['PUT'])
+def updateUser(request):
+    try:
+        post_user = User.objects.all()
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "PUT":
+        serializer = UserSerializer(post_user, data=request.data)
+        data = {}
+        return Response(serializer.data)
+
 
 @api_view(['POST'])
 def subjectView(request):
@@ -101,4 +111,24 @@ def subjectView(request):
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+def getSubject(request):
+    if request.method == 'GET':
+        subject = Subject.objects.all()
+        serializer = SubjectSerializer(subject, many=True)
+        return Response(serializer.data)
 
+
+@api_view(['PUT'])
+def updateSubject(request, pk):
+    try:
+        subject = Subject.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return Response({'message': 'The subject does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = SubjectSerializer(subject, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

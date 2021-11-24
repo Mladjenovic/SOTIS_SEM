@@ -3,7 +3,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
-from drf_writable_nested import WritableNestedModelSerializer
+from drf_writable_nested import WritableNestedModelSerializer, UniqueFieldsMixin
 
 
 from .models import User, Student, Subject
@@ -12,7 +12,7 @@ from .models import User, Student, Subject
 class UserSerializer(serializers.ModelSerializer):
     class Meta: 
         model = User
-        fields = ('email', 'username', 'password', 'is_student', 'is_teacher')
+        fields = ('id', 'email', 'username', 'password', 'is_student', 'is_teacher')
         
 
 
@@ -63,14 +63,15 @@ class TokenSerializer(serializers.ModelSerializer):
             'is_student': is_student,
             'is_teacher': is_teacher
         }
-    
+
+
 class StudentSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
     user = UserSerializer()
     
     class Meta: 
         model = Student
         fields = ["user", "average_grade"]
-        
+        """
         def save(self):
             user = self.validated_data['user']
             user.password = make_password(user.password)
@@ -82,11 +83,12 @@ class StudentSerializer(WritableNestedModelSerializer, serializers.ModelSerializ
             student = Student.objects.create(**validated_data)
             User.objects.create(student=student, **user_data)
             return student
-        
+        """
+
+
 class SubjectSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
     student = StudentSerializer(many=True)
     
     class Meta: 
         model = Subject
-        fields = ["student", "title", "description"]
-    
+        fields = ["id", "student", "title", "description"]

@@ -33,5 +33,7 @@ class Subject(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     # test = tu ne ide nista ali postoji
 
+    objects = models.Manager()
+
     def __str__(self):
         return self.title
