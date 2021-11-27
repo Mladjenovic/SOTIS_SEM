@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\cvele\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\cvele\\.nuget\\packages"
+    ]
+  }
+}
