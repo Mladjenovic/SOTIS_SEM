@@ -1,0 +1,160 @@
+CREATE TABLE [Admins] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [UserId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Profesors] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [UserId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Students] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [UserId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Tests] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Title] nvarchar(120),
+  [Description] nvarchar(255),
+  [MinimumPoints] float,
+  [ProfesorId] int NOT NULL,
+  [SubjectId] int NOT NULL
+)
+GO
+
+CREATE TABLE [TestResults] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Date] nvarchar(100),
+  [Points] float,
+  [Grade] int,
+  [StudentId] int NOT NULL,
+  [TestId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Sections] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Name] nvarchar(255),
+  [TestId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Questions] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Text] nvarchar(255),
+  [PointsPerQuestion] float,
+  [SectionId] int NOT NULL,
+  [ProblemId] int
+)
+GO
+
+CREATE TABLE [Answers] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Text] nvarchar(255),
+  [Correct] BIT,
+  [QuestionId] int NOT NULL
+)
+GO
+
+CREATE TABLE [TestResultsAnswers] (
+  [TestResultId] int NOT NULL,
+  [AnswerId] int NOT NULL,
+  PRIMARY KEY (TestResultId, AnswerId)
+)
+GO
+
+CREATE TABLE [Subjects] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [title] nvarchar(255),
+  [Description] nvarchar(255),
+  [Name] nvarchar(255),
+  [MinimumPoints] float,
+  [ProfesorId] int 
+)
+GO
+
+CREATE TABLE [Problems] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Name] nvarchar(255),
+  [SubjectID] int,
+  [SumarizeId] int
+)
+GO
+
+CREATE TABLE [Sumarises] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [ProblemId] int,
+  [KnowledgeSpaceId] int
+)
+GO
+
+CREATE TABLE [KnowledgeSpaces] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [Name] nvarchar(255),
+  [SubjectId] int
+)
+GO
+
+CREATE TABLE [ProblemsStudents] (
+  [StudentId] int,
+  [ProblemId] int
+)
+GO
+
+ALTER TABLE [Tests] ADD FOREIGN KEY ([ProfesorId]) REFERENCES [Profesors] ([Id])
+GO
+
+ALTER TABLE [Tests] ADD FOREIGN KEY ([SubjectId]) REFERENCES [Subjects] ([Id])
+GO
+
+ALTER TABLE [TestResults] ADD FOREIGN KEY ([StudentId]) REFERENCES [Students] ([Id])
+GO
+
+ALTER TABLE [TestResults] ADD FOREIGN KEY ([TestId]) REFERENCES [Tests] ([Id])
+GO
+
+ALTER TABLE [Sections] ADD FOREIGN KEY ([TestId]) REFERENCES [Tests] ([Id])
+GO
+
+ALTER TABLE [Questions] ADD FOREIGN KEY ([SectionId]) REFERENCES [Sections] ([Id])
+GO
+
+ALTER TABLE [Questions] ADD FOREIGN KEY ([ProblemId]) REFERENCES [Problems] ([Id])
+GO
+
+ALTER TABLE [Answers] ADD FOREIGN KEY ([QuestionId]) REFERENCES [Questions] ([Id])
+GO
+
+ALTER TABLE [TestResultsAnswers] ADD FOREIGN KEY ([TestResultId]) REFERENCES [TestResults] ([Id])
+GO
+
+ALTER TABLE [TestResultsAnswers] ADD FOREIGN KEY ([AnswerId]) REFERENCES [Answers] ([Id])
+GO
+
+ALTER TABLE [Subjects] ADD FOREIGN KEY ([ProfesorId]) REFERENCES [Profesors] ([Id])
+GO
+
+ALTER TABLE [Problems] ADD FOREIGN KEY ([SubjectID]) REFERENCES [Subjects] ([Id])
+GO
+
+ALTER TABLE [Problems] ADD FOREIGN KEY ([SumarizeId]) REFERENCES [Sumarises] ([Id])
+GO
+
+ALTER TABLE [Sumarises] ADD FOREIGN KEY ([ProblemId]) REFERENCES [Problems] ([Id])
+GO
+
+ALTER TABLE [Sumarises] ADD FOREIGN KEY ([KnowledgeSpaceId]) REFERENCES [KnowledgeSpaces] ([Id])
+GO
+
+ALTER TABLE [KnowledgeSpaces] ADD FOREIGN KEY ([SubjectId]) REFERENCES [Subjects] ([Id])
+GO
+
+ALTER TABLE [ProblemsStudents] ADD FOREIGN KEY ([StudentId]) REFERENCES [Students] ([Id])
+GO
+
+ALTER TABLE [ProblemsStudents] ADD FOREIGN KEY ([ProblemId]) REFERENCES [Problems] ([Id])
+GO

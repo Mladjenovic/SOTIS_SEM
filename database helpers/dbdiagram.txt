@@ -1,0 +1,102 @@
+
+table Admins{
+  Id int [pk, increment]
+  UserId int
+}
+table Profesors{
+  Id int [pk, increment]
+  UserId int
+}
+table Students{
+  Id int [pk, increment]
+  UserId int
+}
+
+
+table Tests{
+  Id int [pk, increment]
+  Title varchar
+  Description varchar
+  MinimumPoints float
+  ProfesorId int [ref: > Profesors.Id]
+  SubjectId int [ref: > Subjects.Id]
+}
+
+
+table TestResults {
+  Id int [pk, increment]
+  Date varchar
+  Points float
+  Grade int
+  StudentId int [ref: > Students.Id]
+  TestId int [ref: - Tests.Id]
+}
+
+
+
+table Sections{
+  Id int [pk, increment]
+  Name varchar
+  TestId int [ref: > Tests.Id]
+}
+table Questions{
+  Id int [pk, increment]
+  Text varchar
+  PointsPerQuestion float
+  SectionId int [ref: > Sections.Id]
+  ProblemId int [ref: > Problems.Id]
+}
+
+table Answers {
+  Id int [pk, increment]
+  Text varchar
+  Correct boolean
+  QuestionId int [ref: > Questions.Id]
+}
+
+
+
+table TestResultsAnswers{
+  TestResultId int [ref: > TestResults.Id]
+  AnswerId int [ref: > Answers.Id]
+}
+
+table Subjects{
+  Id int [pk, increment]
+  title varchar
+  Description varchar
+  Name varchar
+  MinimumPoints float
+  ProfesorId int [ref: > Profesors.Id]
+  
+
+}
+table Problems{
+   Id int [pk, increment]
+   Name varchar
+   SubjectID int [ref: > Subjects.Id]
+   SumarizeId int [ref: > Sumarises.Id]
+}
+
+table Sumarises{
+  Id int [pk, increment]
+  ProblemId int [ref: > Problems.Id]
+  KnowledgeSpaceId int [ref: > KnowledgeSpaces.Id]
+}
+table KnowledgeSpaces{
+  Id int [pk, increment]
+  Name varchar
+  SubjectId int [ref: > Subjects.Id]
+}
+
+table ProblemsStudents{
+  StudentId int [ref: > Students.Id]
+  ProblemId int [ref: > Problems.Id]
+}
+
+
+
+
+
+
+
