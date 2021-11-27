@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Models;
+using backend.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace backend
         {
 
             services.AddControllers();
+            services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddDbContext<AuthenticationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddDbContext<DbSotisContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddDefaultIdentity<User>().AddEntityFrameworkStores<AuthenticationContext>();
