@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace backend.Data
 {
-    public class AuthenticationContext : IdentityDbContext
+    public class AuthenticationContext : IdentityDbContext<ApplicationIdentityUser, ApplicationRole, int>
     {
         public AuthenticationContext(DbContextOptions<AuthenticationContext> options) : base(options)
         {
 
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<ApplicationIdentityUser> Users { get; set; }
     }
 }

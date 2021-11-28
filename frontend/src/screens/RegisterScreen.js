@@ -52,11 +52,10 @@ const RegisterScreen = () => {
     console.log("Received values of form: ", values);
     dispatch(
       register(
-        values.firstname,
-        values.lastname,
         values.username,
-        values.email,
         values.password,
+        values.email,
+        values.fullname,
         values.userType
       )
     );
@@ -76,36 +75,6 @@ const RegisterScreen = () => {
         scrollToFirstError
       >
         <Form.Item
-          name="firstname"
-          label="First Name"
-          tooltip="Enter your first name!"
-          rules={[
-            {
-              required: true,
-              message: "Please input your nickname!",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="lastname"
-          label="Last Name"
-          tooltip="Enter your last name!"
-          rules={[
-            {
-              required: true,
-              message: "Please input your last name!",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
           name="username"
           label="Username"
           tooltip="Enter your username!"
@@ -113,6 +82,21 @@ const RegisterScreen = () => {
             {
               required: true,
               message: "Please input your username!",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="fullname"
+          label="Full Name"
+          tooltip="Enter your full name!"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Full name!",
               whitespace: true,
             },
           ]}
@@ -179,8 +163,9 @@ const RegisterScreen = () => {
 
         <Form.Item name="userType" label="Radio.Group">
           <Radio.Group>
-            <Radio value="student">student</Radio>
-            <Radio value="teacher">teacher</Radio>
+            <Radio value="Admin">Admin</Radio>
+            <Radio value="Profesor">Profesor</Radio>
+            <Radio value="Student">Student</Radio>
           </Radio.Group>
         </Form.Item>
 

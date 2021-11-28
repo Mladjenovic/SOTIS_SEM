@@ -15,8 +15,8 @@ export const login = (username, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "http://localhost:8000/api/users/login/",
-      { username: username, password: password },
+      "https://localhost:44393/api/UsersContoller/Login",
+      { UserName: username, Password: password },
       config
     );
 
@@ -30,8 +30,8 @@ export const login = (username, password) => async (dispatch) => {
     dispatch({
       type: actions.USER_LOGIN_FAIL,
       payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
+        error.response && error.response.data
+          ? error.response.data
           : error.message,
     });
   }
@@ -43,8 +43,7 @@ export const logout = () => (dispatch) => {
 };
 
 export const register =
-  (firstname, lastname, username, email, password, userType) =>
-  async (dispatch) => {
+  (username, password, email, fullname, userType) => async (dispatch) => {
     try {
       dispatch({
         type: actions.USER_REGISTER_REQUEST,
@@ -56,23 +55,15 @@ export const register =
         },
       };
 
-      const user = {
-        user: {
-          firstname: firstname,
-          lastname: lastname,
-          username: username,
-          email: email,
-          password: password,
-          is_student: userType == "student" ? "True" : "False",
-          is_teacher: userType == "teacher" ? "True" : "False",
-        },
-      };
-
-      console.log(user);
-
       const { data } = await axios.post(
-        "http://localhost:8000/api/users/register/",
-        user,
+        "https://localhost:44393/api/UsersContoller/Register",
+        {
+          Username: username,
+          Password: password,
+          Email: email,
+          Fullname: fullname,
+          UserType: userType,
+        },
         config
       );
 

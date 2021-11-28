@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace backend.Models
 {
-    public class User : IdentityUser
+    public class ApplicationIdentityUser :  IdentityUser<int>
     {
-        [Key]
-        public int Id { get; set; }
         public string FullName { get; set; }
 
         public string UserType { get; set; }
+    }
+
+    public class ApplicationRole : IdentityRole<int>
+    {
     }
 }

@@ -74,7 +74,7 @@ function CustomLayout() {
           <Menu.Item key="4" icon={<UserAddOutlined />}>
             <Link to="/register/">Register</Link>
           </Menu.Item>
-          {userInfo && userInfo.is_teacher ? (
+          {userInfo && userInfo.UserType == "Profesor" ? (
             <Menu.Item key="5" icon={<PlusOutlined />}>
               <Link to="/make-test/">Make test</Link>
             </Menu.Item>
@@ -89,7 +89,7 @@ function CustomLayout() {
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>
-              {userInfo ? userInfo.username : "No user"}
+              {userInfo ? userInfo.UserName : "No user"}
             </Breadcrumb.Item>
           </Breadcrumb>
           <div
