@@ -1,4 +1,5 @@
-﻿using backend.DTOModels;
+﻿using backend.Data;
+using backend.DTOModels;
 using backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,11 +17,13 @@ namespace backend.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private DbSotisContext _context;
 
-        public UsersContoller(SignInManager<User> signInManager, UserManager<User> userManager)
+        public UsersContoller(SignInManager<User> signInManager, UserManager<User> userManager, DbSotisContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _context = context;
         }
 
         [HttpPost]
@@ -38,6 +41,14 @@ namespace backend.Controllers
             try
             {
                 var result = await _userManager.CreateAsync(user, model.Password);
+                if (user.UserType == "Admin")
+                {
+                    _context.Admins.Add(new Admin()
+                    {
+                        UserId = user.Id
+                    });
+                    await _context.SaveChangesAsync();
+                }
                 return Ok(result);
             }
             catch (Exception)
