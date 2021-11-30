@@ -5,6 +5,7 @@ using backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -101,5 +102,29 @@ namespace backend.Controllers
 
             return StatusCode(404, "Wrong username or passwrod");
         }
+
+
+        [HttpGet]
+        [Route("Users")]
+        public async Task<List<AllUsersUser>> GetUsersAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            List<AllUsersUser> allUsers = new List<AllUsersUser>();
+            foreach (var user in users)
+            {
+                allUsers.Add(new AllUsersUser()
+                {
+                    UserName = user.UserName, 
+                    FullName = user.FullName,
+                    UserType = user.UserType, 
+                    Email = user.Email, 
+                    Id = user.Id
+                });
+            }
+            return allUsers;
+        }
+
+
+
     }
 }

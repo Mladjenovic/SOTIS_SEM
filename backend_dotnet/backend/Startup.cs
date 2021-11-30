@@ -35,6 +35,8 @@ namespace backend
             services.AddControllers();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
+            services.AddScoped<IProfesorRepository, ProfesorRepository>();
+            services.AddScoped<IProblemRespository, ProblemRepository>();
             services.AddDbContext<AuthenticationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddDbContext<DbSotisContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddDefaultIdentity<ApplicationIdentityUser>().AddEntityFrameworkStores<AuthenticationContext>();

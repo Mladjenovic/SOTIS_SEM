@@ -9,7 +9,8 @@ import { logout } from "../actions/userActions";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-
+import SubjectScreen from "../screens/SubjectScreen";
+import SubjectDetailScreen from "../screens/SubjectDetailScreen";
 import {
   LoginOutlined,
   PlusOutlined,
@@ -81,6 +82,14 @@ function CustomLayout() {
           ) : (
             <div></div>
           )}
+
+          {userInfo && userInfo.UserType == "Admin" ? (
+            <Menu.Item key="5" icon={<PlusOutlined />}>
+              <Link to="/subjects/">All Subjects</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -100,6 +109,12 @@ function CustomLayout() {
               <Route path="/" component={HomeScreen} exact></Route>
               <Route path="/login/" component={LoginScreen} exact></Route>
               <Route path="/register/" component={RegisterScreen} exact></Route>
+              <Route path="/subjects/" component={SubjectScreen} exact></Route>
+              <Route
+                path="/subject/:id"
+                component={SubjectDetailScreen}
+                exact
+              ></Route>
             </Container>
           </div>
         </Content>

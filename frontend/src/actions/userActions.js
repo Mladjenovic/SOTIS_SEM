@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import * as actions from "../constants/userConstants";
 
 export const login = (username, password) => async (dispatch) => {

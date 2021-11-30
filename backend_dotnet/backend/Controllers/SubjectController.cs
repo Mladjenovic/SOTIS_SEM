@@ -40,7 +40,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Subject>> PostSubject(int id, Subject subject)
+        public async Task<ActionResult<Subject>> PutSubject(int id, Subject subject)
         {
             return await _repository.PutSubject(id, subject);
         }

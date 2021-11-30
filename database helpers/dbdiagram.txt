@@ -1,17 +1,17 @@
-
 table Admins{
   Id int [pk, increment]
   UserId int
 }
+
 table Profesors{
   Id int [pk, increment]
   UserId int
 }
+
 table Students{
   Id int [pk, increment]
   UserId int
 }
-
 
 table Tests{
   Id int [pk, increment]
@@ -22,7 +22,6 @@ table Tests{
   SubjectId int [ref: > Subjects.Id]
 }
 
-
 table TestResults {
   Id int [pk, increment]
   Date varchar
@@ -31,8 +30,6 @@ table TestResults {
   StudentId int [ref: > Students.Id]
   TestId int [ref: - Tests.Id]
 }
-
-
 
 table Sections{
   Id int [pk, increment]
@@ -54,8 +51,6 @@ table Answers {
   QuestionId int [ref: > Questions.Id]
 }
 
-
-
 table TestResultsAnswers{
   TestResultId int [ref: > TestResults.Id]
   AnswerId int [ref: > Answers.Id]
@@ -68,8 +63,6 @@ table Subjects{
   Name varchar
   MinimumPoints float
   ProfesorId int [ref: > Profesors.Id]
-  
-
 }
 table Problems{
    Id int [pk, increment]
@@ -83,6 +76,7 @@ table Sumarises{
   ProblemId int [ref: > Problems.Id]
   KnowledgeSpaceId int [ref: > KnowledgeSpaces.Id]
 }
+
 table KnowledgeSpaces{
   Id int [pk, increment]
   Name varchar
