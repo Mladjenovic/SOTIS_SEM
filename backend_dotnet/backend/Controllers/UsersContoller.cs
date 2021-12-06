@@ -80,7 +80,7 @@ namespace backend.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(404, "Registration failed");
             } 
         }
 

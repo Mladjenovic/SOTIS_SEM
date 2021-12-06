@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Modal, Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Subject from "../components/Subject";
 
 function SubjectScreen() {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -55,9 +59,13 @@ function SubjectScreen() {
     <div>
       <div className="header">
         <h1>subjects</h1>
-        <Button style={{ margin: 10 }} onClick={handleShow}>
-          Create New Subject
-        </Button>
+        {userInfo && userInfo.UserType == "Admin" ? (
+          <Button style={{ margin: 10 }} onClick={handleShow}>
+            Create New Subject
+          </Button>
+        ) : (
+          <div></div>
+        )}
       </div>
       <Row>
         {subjects.map((subject) => (

@@ -1,4 +1,5 @@
-﻿using backend.Models;
+﻿using backend.Data;
+using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,12 @@ namespace backend.Controllers
     public class SubjectController : ControllerBase
     {
         private readonly ISubjectRepository _repository;
+        private readonly DbSotisContext _context;
 
-        public SubjectController(ISubjectRepository repository)
+        public SubjectController(ISubjectRepository repository, DbSotisContext context)
         {
             _repository = repository;
+            _context = context;
         }
 
         //api/subject

@@ -37,6 +37,9 @@ namespace backend
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IProfesorRepository, ProfesorRepository>();
             services.AddScoped<IProblemRespository, ProblemRepository>();
+            services.AddScoped<IKnowledgeSpaceRepository, KnowledgeSpaceRepository>();
+            services.AddScoped<ISurmiseRepository, SurmiseRepository>();
+            services.AddScoped<ISectionRepository, SectionRepository>();
             services.AddDbContext<AuthenticationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddDbContext<DbSotisContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddDefaultIdentity<ApplicationIdentityUser>().AddEntityFrameworkStores<AuthenticationContext>();

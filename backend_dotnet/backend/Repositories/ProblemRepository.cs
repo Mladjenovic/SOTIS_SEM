@@ -31,7 +31,6 @@ namespace backend.Repositories
         public async Task<ActionResult<Problem>> GetProblem(int id)
         {
             return await _context.Problems.FindAsync(id);
-
         }
 
         public async Task<ActionResult<IEnumerable<Problem>>> GetProblems()

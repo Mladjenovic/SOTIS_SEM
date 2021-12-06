@@ -1,0 +1,2 @@
+Scaffold-DataContext -provider Microsoft.EntityFrameworkCore.SqlServer -connection  "Data Source = (localdb)\Cvele; Database = DbSotis; Trusted_Connection=True;" -OutputDir Models -ContextDir Data
+

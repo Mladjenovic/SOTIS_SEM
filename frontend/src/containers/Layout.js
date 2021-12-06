@@ -11,6 +11,9 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SubjectScreen from "../screens/SubjectScreen";
 import SubjectDetailScreen from "../screens/SubjectDetailScreen";
+import SurmiseScreen from "../screens/SurmiseScreen";
+import TestScreen from "../screens/TestScreen";
+import TestDetailScreen from "../screens/TestDetailScreen";
 import {
   LoginOutlined,
   PlusOutlined,
@@ -50,42 +53,50 @@ function CustomLayout() {
             <Link to="/">Home</Link>
           </Menu.Item>
 
-          <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            {userInfo ? (
-              <Menu.Item key="2" icon={<LoginOutlined />}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="login-form-button"
-                  onClick={logoutHandler}
-                >
-                  Logout
-                </Button>
-              </Menu.Item>
-            ) : (
-              <Menu.Item key="2" disabled>
-                <p></p>
-              </Menu.Item>
-            )}
-          </SubMenu>
-
-          <Menu.Item key="3" icon={<LoginOutlined />}>
-            <Link to="/login/">Login</Link>
-          </Menu.Item>
-          <Menu.Item key="4" icon={<UserAddOutlined />}>
-            <Link to="/register/">Register</Link>
-          </Menu.Item>
-          {userInfo && userInfo.UserType == "Profesor" ? (
-            <Menu.Item key="5" icon={<PlusOutlined />}>
-              <Link to="/make-test/">Make test</Link>
+          {userInfo ? (
+            <Menu.Item key="2" icon={<LoginOutlined />}>
+              <Link to="/login/" onClick={logoutHandler}>
+                Logout
+              </Link>
             </Menu.Item>
           ) : (
             <div></div>
           )}
 
-          {userInfo && userInfo.UserType == "Admin" ? (
+          {userInfo ? (
+            <div></div>
+          ) : (
+            <Menu.Item key="3" icon={<LoginOutlined />}>
+              <Link to="/login/">Login</Link>
+            </Menu.Item>
+          )}
+          {userInfo ? (
+            <div></div>
+          ) : (
+            <Menu.Item key="4" icon={<UserAddOutlined />}>
+              <Link to="/register/">Register</Link>
+            </Menu.Item>
+          )}
+
+          {userInfo && userInfo.UserType == "Profesor" ? (
             <Menu.Item key="5" icon={<PlusOutlined />}>
+              <Link to="/tests/">All tests</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
+
+          {userInfo && userInfo.UserType != "Student" ? (
+            <Menu.Item key="6" icon={<PlusOutlined />}>
               <Link to="/subjects/">All Subjects</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
+
+          {userInfo && userInfo.UserType != "Student" ? (
+            <Menu.Item key="7" icon={<PlusOutlined />}>
+              <Link to="/surmises/">Create surmise</Link>
             </Menu.Item>
           ) : (
             <div></div>
@@ -110,9 +121,16 @@ function CustomLayout() {
               <Route path="/login/" component={LoginScreen} exact></Route>
               <Route path="/register/" component={RegisterScreen} exact></Route>
               <Route path="/subjects/" component={SubjectScreen} exact></Route>
+              <Route path="/surmises/" component={SurmiseScreen} exact></Route>
               <Route
                 path="/subject/:id"
                 component={SubjectDetailScreen}
+                exact
+              ></Route>
+              <Route path="/tests/" component={TestScreen} exact></Route>
+              <Route
+                path="/test/:id"
+                component={TestDetailScreen}
                 exact
               ></Route>
             </Container>

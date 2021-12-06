@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { login } from "../actions/userActions";
 
 import Loader from "../components/Loader";
@@ -14,11 +14,14 @@ const LoginScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { error, loading, userInfo } = userLogin;
 
+  let history = useHistory();
+
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
     dispatch(login(values.username, values.password));
+    history.push(`/subjects/`);
   };
 
   return (
