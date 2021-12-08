@@ -17,3 +17,8 @@ h3 {
 .header button {
   margin-left: 20px;
 }
+
+.special_modal .modal-content {
+  background-color: #000;
+  color: #fff;
+}

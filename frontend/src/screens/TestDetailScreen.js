@@ -9,18 +9,31 @@ function TestDetailScreen({ match }) {
   const { userInfo } = userLogin;
 
   const [test, setTest] = useState([]);
+  const [selectedSection, setSelectedSection] = useState([]);
 
   const [show, setShow] = useState(false);
   const [showAddNewSection, setShowAddNewSection] = useState(false);
+  const [sectionsRelatedToTest, setSectionsRelatedToTest] = useState([]);
+
+  const [showAllQuestions, setShowAllQuestion] = useState(false);
+  const [showAddNewQuestion, setShowAddNewQuestion] = useState(false);
 
   // Section handles
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleShowAddNewSection = () => setShowAddNewSection(true);
-  const handleCloseShowAddNewSection = () => setShowAddNewSection(false);
+  const handleCloseAddNewSection = () => setShowAddNewSection(false);
 
-  const [sectionsRelatedToTest, setSectionsRelatedToTest] = useState([]);
+  // Question handles
+  const handleShowAllQuestions = () => setShowAllQuestion(true);
+  const handleCloseAllQuestions = () => setShowAllQuestion(false);
+
+  const handleShowAddNewQuestion = (sectionId) => {
+    setShowAddNewQuestion(true);
+    setSelectedSection(sectionId);
+  };
+  const handleCloseAddNewQuestion = () => setShowAddNewQuestion(false);
 
   useEffect(() => {
     async function fetchTest() {
@@ -36,10 +49,28 @@ function TestDetailScreen({ match }) {
         `https://localhost:44393/api/Section/SectionRelatedToTest/${match.params.id}`
       );
       setSectionsRelatedToTest(data);
-      console.log("AAAAAAAAAAAA", data);
     }
     fetchSectionsRealtedToTest();
   }, []);
+
+  const onFinish = (event) => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const { data } = axios.post(
+      "https://localhost:44393/api/Section",
+      {
+        name: event.target.elements.sectionName.value,
+        testId: test.id,
+      },
+      config
+    );
+
+    handleCloseAddNewSection();
+  };
 
   return (
     <div>
@@ -98,6 +129,7 @@ function TestDetailScreen({ match }) {
                 <th>Id</th>
                 <th>Name</th>
                 <th>Test id</th>
+                <th>Questions</th>
               </tr>
             </thead>
             <tbody>
@@ -106,6 +138,19 @@ function TestDetailScreen({ match }) {
                   <td>{section.id}</td>
                   <td>{section.name}</td>
                   <td>{section.testId}</td>
+                  <td style={{ width: 220 }}>
+                    <span>
+                      <Button style={{ margin: 10 }} size="sm">
+                        all
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleShowAddNewQuestion(section.id)}
+                      >
+                        new
+                      </Button>
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -114,11 +159,11 @@ function TestDetailScreen({ match }) {
       </Modal>
 
       {/* Section add new  */}
-      {/* 
-      <Modal show={showAddNewProblem} onHide={handleCloseAddNewProblem}>
+
+      <Modal show={showAddNewSection} onHide={handleCloseAddNewSection}>
         <Modal.Header closeButton>
           <Modal.Title>
-            Add new Problem for subject({subject.id}) {subject.title}
+            Add Section for test({test.id}): {test.title})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -127,8 +172,8 @@ function TestDetailScreen({ match }) {
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter title"
-                name="problemName"
+                placeholder="Enter name"
+                name="sectionName"
                 required
               />
             </Form.Group>
@@ -138,7 +183,48 @@ function TestDetailScreen({ match }) {
             </Button>
           </Form>
         </Modal.Body>
-      </Modal> */}
+      </Modal>
+
+      {/* Question add new  */}
+
+      <Modal
+        show={showAddNewQuestion}
+        onHide={handleCloseAddNewQuestion}
+        className="special_modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Add Question for section: ({selectedSection})
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={onFinish}>
+            <Form.Group className="mb-3" controlId="formBasicQuestionText">
+              <Form.Label>Question Text</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter the question"
+                name="questionText"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicPointsPerQuestion">
+              <Form.Label>Points for question</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter how much points this question is worth"
+                name="questionPointsPerQuestion"
+                required
+              />
+            </Form.Group>
+
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

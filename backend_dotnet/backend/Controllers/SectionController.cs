@@ -58,7 +58,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Section>> PostProblem(Section section)
+        public async Task<ActionResult<Section>> PostSection(Section section)
         {
             return await _repository.PostSection(section);
         }

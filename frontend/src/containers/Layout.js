@@ -14,6 +14,7 @@ import SubjectDetailScreen from "../screens/SubjectDetailScreen";
 import SurmiseScreen from "../screens/SurmiseScreen";
 import TestScreen from "../screens/TestScreen";
 import TestDetailScreen from "../screens/TestDetailScreen";
+import GraphScreen from "../screens/GraphScreen";
 import {
   LoginOutlined,
   PlusOutlined,
@@ -101,6 +102,14 @@ function CustomLayout() {
           ) : (
             <div></div>
           )}
+
+          {userInfo && userInfo.UserType != "Student" ? (
+            <Menu.Item key="8">
+              <Link to="/graph/">Graph</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -133,6 +142,7 @@ function CustomLayout() {
                 component={TestDetailScreen}
                 exact
               ></Route>
+              <Route path="/graph/" component={GraphScreen} exact></Route>
             </Container>
           </div>
         </Content>

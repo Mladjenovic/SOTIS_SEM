@@ -11,8 +11,12 @@ function TestScreen() {
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const [tests, setTests] = useState([]);
+  const [profesors, setProfesors] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [currentProfesor, setCurrentProfesor] = useState([]);
 
   useEffect(() => {
     async function fetchTests() {
@@ -20,7 +24,44 @@ function TestScreen() {
       setTests(data);
     }
     fetchTests();
+
+    async function fetchProfesors() {
+      const { data } = await axios.get(
+        "https://localhost:44393/api/Profesor/ProfesorsVerbose"
+      );
+      setProfesors(data);
+    }
+    fetchProfesors();
+
+    async function fetchSubjects() {
+      const { data } = await axios.get("https://localhost:44393/api/Subject");
+      setSubjects(data);
+    }
+    fetchSubjects();
+
+    setCurrentProfesor(profesors.find((x) => x.username == userInfo.UserName));
   }, []);
+
+  const onFinish = (event) => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const { data } = axios.post(
+      "https://localhost:44393/api/Test",
+      {
+        title: event.target.elements.title.value,
+        description: event.target.elements.description.value,
+        minimumPoints: event.target.elements.minimumPoints.value,
+        profesorId: currentProfesor.id,
+        subjectId: event.target.subjectId.value,
+      },
+      config
+    );
+    handleClose();
+  };
 
   return (
     <div>
@@ -47,6 +88,57 @@ function TestScreen() {
           </Col>
         ))}
       </Row>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create new test</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={onFinish}>
+            <Form.Group className="mb-3" controlId="formBasicTitle">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter title"
+                name="title"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicDescription">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                name="description"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicMinimumPoints">
+              <Form.Label>Minimum points</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter minimum number of passing the test"
+                name="minimumPoints"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Subject ID</Form.Label>
+              <Form.Select aria-label="Default select example" name="subjectId">
+                {subjects.map((subject) => (
+                  <option value={subject.id}>{subject.name}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
