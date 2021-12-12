@@ -124,10 +124,12 @@ goal_list = []
 educational_outcomes_list = []
 
 for course in courses:
-    if "Elective" not in course.text:
-        course_without_elective = str(course.text)
-        print(course_without_elective)
-        courses_list.append(course_without_elective)
+    num = len(course.text)
+    if num > 0:
+        if "Elective" not in course.text:
+            course_without_elective = str(course.text)
+            print(course_without_elective)
+            courses_list.append(course_without_elective)
 
     curWindowHndl = driver.current_window_handle
     open_link_new_tab(course)
