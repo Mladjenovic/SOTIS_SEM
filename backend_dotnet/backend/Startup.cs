@@ -40,6 +40,8 @@ namespace backend
             services.AddScoped<IKnowledgeSpaceRepository, KnowledgeSpaceRepository>();
             services.AddScoped<ISurmiseRepository, SurmiseRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddDbContext<AuthenticationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddDbContext<DbSotisContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddDefaultIdentity<ApplicationIdentityUser>().AddEntityFrameworkStores<AuthenticationContext>();

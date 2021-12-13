@@ -16,7 +16,6 @@ namespace backend.Controllers
     public class ProblemController : ControllerBase
     {
         private readonly IProblemRespository _repository;
-
         private readonly DbSotisContext _context;
 
         public ProblemController(DbSotisContext context, IProblemRespository repository)
