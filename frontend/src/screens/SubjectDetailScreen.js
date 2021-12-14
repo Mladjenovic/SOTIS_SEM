@@ -23,8 +23,6 @@ function SubjectDetailScreen({ match }) {
   const [showAddNewKnowledgeSpace, setShowAddNewKnowledgeSpace] =
     useState(false);
 
-  const [showSurmises, setShowSurmises] = useState(false);
-
   // Problem handles
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -42,11 +40,17 @@ function SubjectDetailScreen({ match }) {
     setShowAddNewKnowledgeSpace(true);
 
   // Surmises
-  const handleShowSurmises = (problemId) => {
+
+  const [showAllSurmises, setShowAllSurmises] = useState(false);
+  const [showAddNewSurmise, setShowAddNewSurmise] = useState(false);
+
+  const handleShowAllSurmises = (problemId) => {
     setSelectedProblem(problemId);
-    setShowSurmises(true);
+    setShowAllSurmises(true);
   };
-  const handleCloseShowSurmises = () => setShowSurmises(false);
+  const handleCloseShowAllSurmises = () => setShowAllSurmises(false);
+
+  const handleShowAddNewSurmise = () => {};
 
   useEffect(() => {
     async function fetchSubject() {
@@ -191,7 +195,7 @@ function SubjectDetailScreen({ match }) {
 
       {/* Problems all */}
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
             All problems for subject({subject.id}): {subject.title}
@@ -214,9 +218,21 @@ function SubjectDetailScreen({ match }) {
                   <td>{problem.name}</td>
                   <td>{problem.subjectId}</td>
                   <td>
-                    <Button onClick={() => handleShowSurmises(problem.id)}>
-                      Surmises
-                    </Button>
+                    <span>
+                      <Button
+                        onClick={() => handleShowAllSurmises(problem.id)}
+                        size="sm"
+                      >
+                        All
+                      </Button>
+                      <Button
+                        onClick={() => handleShowAddNewSurmise(problem.id)}
+                        style={{ marginLeft: 10 }}
+                        size="sm"
+                      >
+                        New
+                      </Button>
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -314,7 +330,7 @@ function SubjectDetailScreen({ match }) {
 
       {/* Knowledge spaces add new */}
 
-      <Modal show={showSurmises} onHide={handleCloseShowSurmises}>
+      <Modal show={showAllSurmises} onHide={handleCloseShowAllSurmises}>
         <Modal.Header closeButton>
           <Modal.Title>Surmises (Needs further implementation)</Modal.Title>
         </Modal.Header>
