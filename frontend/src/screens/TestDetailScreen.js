@@ -9,6 +9,7 @@ function TestDetailScreen({ match }) {
   const { userInfo } = userLogin;
 
   const [test, setTest] = useState([]);
+  const [checked, setChecked] = useState(false);
   const [selectedSection, setSelectedSection] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
 
@@ -19,22 +20,31 @@ function TestDetailScreen({ match }) {
     []
   );
 
+  const [answersRelatedToQuestion, setAnswersRelatedToQuestion] = useState([]);
+
   const [showAllQuestions, setShowAllQuestion] = useState(false);
   const [showAddNewQuestion, setShowAddNewQuestion] = useState(false);
 
+  // Helper functions
   async function fetchQuestionsRelatedToSection(sectionId) {
     const { data } = await axios.get(
       `https://localhost:44393/api/Question/QuestionsRealtedToSection/${sectionId}`
     );
     setQuestionsRelatedToSection(data);
+  }
+
+  async function fetchAnswersRelatedToQuestion(questionId) {
+    const { data } = await axios.get(
+      `https://localhost:44393/api/Answer/AnswersRelatedToQuestion/${questionId}`
+    );
+    setAnswersRelatedToQuestion(data);
     console.log(data);
   }
 
   // Section handles
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    fetchQuestionsRelatedToSection();
-    return setShow(true);
+    setShow(true);
   };
 
   const handleShowAddNewSection = () => setShowAddNewSection(true);
@@ -44,7 +54,7 @@ function TestDetailScreen({ match }) {
   const handleShowAllQuestions = (sectionId) => {
     setSelectedSection(sectionId);
     fetchQuestionsRelatedToSection(sectionId);
-    return setShowAllQuestion(true);
+    setShowAllQuestion(true);
   };
   const handleCloseAllQuestions = () => setShowAllQuestion(false);
 
@@ -60,12 +70,15 @@ function TestDetailScreen({ match }) {
   const [showAddNewAnswer, setShowAddNewAnswer] = useState(false);
 
   const handleShowAddNewAnswer = (questionId) => {
-    console.log(questionId);
     setSelectedQuestion(questionId);
     setShowAddNewAnswer(true);
   };
   const handleCloseAddNewAnswer = () => setShowAddNewAnswer(false);
-  const handleShowAllAnswers = () => setShowAllAnswers(true);
+  const handleShowAllAnswers = (questionId) => {
+    fetchAnswersRelatedToQuestion(questionId);
+    setSelectedQuestion(questionId);
+    setShowAllAnswers(true);
+  };
   const handleCloseAllAnswers = () => setShowAllAnswers(false);
 
   useEffect(() => {
@@ -123,6 +136,27 @@ function TestDetailScreen({ match }) {
     );
 
     handleCloseAddNewSection();
+  };
+
+  const onFinishAddNewAnswer = (event) => {
+    event.preventDefault();
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const { data } = axios.post(
+      "https://localhost:44393/api/Answer",
+      {
+        text: event.target.elements.text.value,
+        correct: checked,
+        questionId: selectedQuestion,
+      },
+      config
+    );
+
+    handleCloseAddNewAnswer();
   };
 
   return (
@@ -233,7 +267,7 @@ function TestDetailScreen({ match }) {
               />
             </Form.Group>
 
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmltype="submit">
               Submit
             </Button>
           </Form>
@@ -256,7 +290,7 @@ function TestDetailScreen({ match }) {
                 <th>Points per question</th>
                 <th>Section id</th>
                 <th style={{ width: 220 }}>Problem id</th>
-                <th>&nbsp;</th>
+                <th>Answers</th>
               </tr>
             </thead>
             <tbody>
@@ -291,7 +325,7 @@ function TestDetailScreen({ match }) {
         </Modal.Body>
       </Modal>
 
-      {/* Question add new  */}
+      {/* Questions add new  */}
       <Modal
         show={showAddNewQuestion}
         onHide={handleCloseAddNewQuestion}
@@ -324,47 +358,78 @@ function TestDetailScreen({ match }) {
               />
             </Form.Group>
 
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmltype="submit">
               Submit
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
 
-      {/* Answer add new  */}
+      {/* Answers all */}
+      <Modal show={showAllAnswers} onHide={handleCloseAllAnswers} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            All answers for question: ({selectedSection})
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Text</th>
+                <th>Correct</th>
+                <th>Question Id</th>
+              </tr>
+            </thead>
+            <tbody>
+              {answersRelatedToQuestion.map((answer) => (
+                <tr key={answer.id}>
+                  <td>{answer.id}</td>
+                  <td>{answer.text}</td>
+                  <td>{answer.correct.toString()}</td>
+                  <td>{answer.questionId}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Modal.Body>
+      </Modal>
+
+      {/* Answers add new  */}
       <Modal
         show={showAddNewAnswer}
         onHide={handleCloseAddNewAnswer}
         className="special_modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            Add answer for section: ({selectedQuestion})
+          <Modal.Title style={{ color: "white" }}>
+            Add answer for question: ({selectedQuestion})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={onFinishAddNewQuestion}>
-            <Form.Group className="mb-3" controlId="formBasicQuestionText">
-              <Form.Label>Question Text</Form.Label>
+          <Form onSubmit={onFinishAddNewAnswer}>
+            <Form.Group className="mb-3" controlId="formBasicAnswerText">
+              <Form.Label>Answer Text</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter the question"
+                placeholder="Enter the answer"
                 name="text"
                 required
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPointsPerQuestion">
-              <Form.Label>Points for question</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter how much points this question is worth"
-                name="pointsPerQuestion"
-                required
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+              <input
+                name="correct"
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => setChecked(e.target.checked)}
               />
+              <Form.Label style={{ marginLeft: 10 }}>Correct</Form.Label>
             </Form.Group>
 
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmltype="submit">
               Submit
             </Button>
           </Form>

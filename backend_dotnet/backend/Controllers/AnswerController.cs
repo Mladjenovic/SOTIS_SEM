@@ -3,6 +3,7 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,25 @@ namespace backend.Controllers
         {
             _repository = repository;
             _context = context;
+        }
+
+        [Route("AnswersRelatedToQuestion/{questionId}")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Answer>>> GetAnswersRelatedToQuestion(int questionId)
+        {
+            var answers = await _context.Answers.ToListAsync();
+            var question = await _context.Questions.FindAsync(questionId);
+
+            List<Answer> retVal = new List<Answer>();
+            foreach (var answer in answers)
+            {
+                if (answer.QuestionId == question.Id)
+                {
+                    retVal.Add(answer);
+                }
+            }
+
+            return retVal;
         }
 
         //api/problem
