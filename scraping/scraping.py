@@ -88,7 +88,7 @@ def close_tab():
     except selenium.common.exceptions.ElementNotInteractableException:
         None
 
-"""
+
 programmes = find_elements(programmes_loc)
 
 print("*" * 10, "Programmes", "*" * 10)
@@ -114,7 +114,7 @@ for programme in programmes:
         driver.switch_to.window(curWindowHndl)
     except IndexError:
         continue
-"""
+
 
 driver.find_element(By.XPATH, sit_loc).click()
 
