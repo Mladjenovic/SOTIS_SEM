@@ -29,11 +29,14 @@ goal_title_loc = "//a[contains(@href, \'ppTabs-2\')]"
 goal_text_loc = "//div[@id='ppTabs-2']"
 educational_outcomes_title_loc = "//a[contains(@href, \'ppTabs-3\')]"
 educational_outcomes_text_loc = "//div[@id='ppTabs-3']"
+lectures_loc = "//a[normalize-space()='Lecturers']"
+professors_loc = "//div[@id='ppTabs-9']//a"
+professors_mail_loc = "//table[@class='table table-hover table-fixer']//a"
 
 # Options
 options = Options()
 options.add_argument("start-maximized")
-options.add_argument("headless")
+# options.add_argument("headless")
 
 driver = webdriver.Chrome(service=Service(r"C:\Chrome driver\chromedriver.exe"), options=options)
 url = 'http://ftn.uns.ac.rs/963620642/faculty-of-technical-sciences'
@@ -85,43 +88,48 @@ def close_tab():
     except selenium.common.exceptions.ElementNotInteractableException:
         None
 
-
+"""
 programmes = find_elements(programmes_loc)
 
 print("*" * 10, "Programmes", "*" * 10)
 programmes_list = []
+programme_url = []
+duration_list = []
+ects_list = []
 for programme in programmes:
     print(programme.text)
     programmes_list.append(programme.text)
+    programme_url.append(programme.get_attribute('href'))
+    curWindowHndl = driver.current_window_handle
+    open_link_new_tab(programme)
+    try:
+        driver.switch_to.window(driver.window_handles[1])
+        driverStr = str(driver.current_url)
+        time.sleep(3)
+        duration = find_element_without_click(duration_loc)
+        duration_list.append(duration.text)
+        ects = find_element_without_click(ects_loc)
+        ects_list.append(ects.text)
+        driver.close()
+        driver.switch_to.window(curWindowHndl)
+    except IndexError:
+        continue
+"""
 
 driver.find_element(By.XPATH, sit_loc).click()
-
-duration = find_element_without_click(duration_loc)
-print(duration.text)
-duration = [duration.text]
-
-ects = find_element_without_click(ects_loc)
-print(ects.text)
-ects = [ects.text]
 
 courses = driver.find_elements(By.XPATH, courses_loc)
 course_spec_ui = find_elements(course_spec_ui_loc)
 
-"""
-print("*" * 10, "Courses", "*" * 10)
-for course in courses:
-    if course.text:
-        print(course.text)
-    else:
-        print(course.get_attribute('textContent'))
-    time.sleep(1)
-"""
-
 print("*" * 10, "Courses", "*" * 10)
 courses_list = []
+course_url = []
 ects_course_list = []
 goal_list = []
 educational_outcomes_list = []
+professors_list = []
+professors_url = []
+professors_mail_list = []
 
 for course in courses:
     num = len(course.text)
@@ -130,6 +138,7 @@ for course in courses:
             course_without_elective = str(course.text)
             print(course_without_elective)
             courses_list.append(course_without_elective)
+            courses_list.append(course.get_attribute('href'))
 
     curWindowHndl = driver.current_window_handle
     open_link_new_tab(course)
@@ -149,27 +158,65 @@ for course in courses:
         educational_outcomes_text = find_element_without_click(educational_outcomes_text_loc)
         print("Educational outcomes", educational_outcomes_text.get_attribute("textContent"))
         educational_outcomes_list.append(educational_outcomes_text.get_attribute("textContent"))
+        professors = find_elements(professors_loc)
+        print(professors[1].get_attribute("textContent"))
+        professors_list.append(professors[1].get_attribute("textContent"))
+        professors_url.append(professors[1].get_attribute('href'))
+        find_element(lectures_loc)
+        time.sleep(5)
+
+        courseWindowHndl = driver.current_window_handle
+        open_link_new_tab(professors[1])
+        driver.switch_to.window(driver.window_handles[2])
+        professors_mail = find_element_without_click(professors_mail_loc)
+        time.sleep(1)
+        print(professors_mail.text)
+        professors_mail_list.append(professors_mail.text)
+        driver.close()
+        driver.switch_to.window(courseWindowHndl)
+        time.sleep(1)
+
         driver.close()
         driver.switch_to.window(curWindowHndl)
     except IndexError:
         continue
 
 
-# csv data
-name_dict = {
+# programmes csv data
+programmes_dict = {
             'Programmes': programmes_list,
-            'Course': courses_list,
-            'CourseECTS': ects_course_list,
-            'Goals': goal_list,
-            'Outcomes': educational_outcomes_list
+            'URL': programme_url,
+            'Duration': duration_list,
+            'ECTS': ects_list
           }
 
-dt = pd.DataFrame.from_dict(name_dict, orient='index')
+dt = pd.DataFrame.from_dict(programmes_dict)
 dt.transpose()
 
 # open the file in the write mode
 print(dt)
-dt.to_csv('data.csv', encoding='UTF8', na_rep='null', sep=',')
+dt.to_csv('programmes.csv', encoding='UTF8', na_rep='null', sep=',', index=False)
+
+
+# csv data
+course_dict = {
+            'Course': courses_list,
+            'CourseURL': course_url,
+            'CourseECTS': ects_course_list,
+            'Goals': goal_list,
+            'Outcomes': educational_outcomes_list,
+            'Professors': professors_list,
+            'ProfessorsURL': professors_url,
+            'ProfessorsMail': professors_mail_list
+          }
+
+dt = pd.DataFrame.from_dict(course_dict, orient='index')
+dt.transpose()
+
+# open the file in the write mode
+print(dt)
+dt.to_csv('course.csv', encoding='UTF8', na_rep='null', sep=',')
+
 
 user_choice = input('Please click ENTER button to close application')
 if not user_choice:
