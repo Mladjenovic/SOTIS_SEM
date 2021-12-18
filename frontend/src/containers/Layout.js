@@ -15,6 +15,8 @@ import SurmiseScreen from "../screens/SurmiseScreen";
 import TestScreen from "../screens/TestScreen";
 import TestDetailScreen from "../screens/TestDetailScreen";
 import GraphScreen from "../screens/GraphScreen";
+import StudentTestsScreen from "../screens/StudentTestsScreen";
+import StudentTestDetailScreen from "../screens/StudentTestDetailScreen";
 import {
   LoginOutlined,
   PlusOutlined,
@@ -22,6 +24,7 @@ import {
   UserAddOutlined,
   HomeOutlined,
   UserOutlined,
+  DoubleRightOutlined,
 } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -110,6 +113,14 @@ function CustomLayout() {
           ) : (
             <div></div>
           )}
+
+          {userInfo && userInfo.UserType == "Student" ? (
+            <Menu.Item key="8" icon={<DoubleRightOutlined />}>
+              <Link to="/student-tests/">Tests to take</Link>
+            </Menu.Item>
+          ) : (
+            <div></div>
+          )}
         </Menu>
       </Sider>
       <Layout className="site-layout">
@@ -143,6 +154,16 @@ function CustomLayout() {
                 exact
               ></Route>
               <Route path="/graph/" component={GraphScreen} exact></Route>
+              <Route
+                path="/student-tests/"
+                component={StudentTestsScreen}
+                exact
+              ></Route>
+              <Route
+                path="/test-to-take/:id"
+                component={StudentTestDetailScreen}
+                exact
+              ></Route>
             </Container>
           </div>
         </Content>

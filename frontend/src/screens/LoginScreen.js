@@ -21,7 +21,7 @@ const LoginScreen = () => {
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
     dispatch(login(values.username, values.password));
-    history.push(`/subjects/`);
+    // history.push(`/subjects/`);
   };
 
   return (
