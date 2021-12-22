@@ -10,7 +10,10 @@ function TestScreen() {
   const { userInfo } = userLogin;
 
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setCurrentProfesor(profesors.find((x) => x.username == userInfo.UserName));
+    setShow(true);
+  };
   const handleClose = () => setShow(false);
 
   const [tests, setTests] = useState([]);
@@ -38,9 +41,7 @@ function TestScreen() {
       setSubjects(data);
     }
     fetchSubjects();
-
-    setCurrentProfesor(profesors.find((x) => x.username == userInfo.UserName));
-  }, []);
+  }, [currentProfesor]);
 
   const onFinish = (event) => {
     const config = {
@@ -48,7 +49,7 @@ function TestScreen() {
         "Content-type": "application/json",
       },
     };
-
+    console.log("usao je u test post onFinish metodu");
     const { data } = axios.post(
       "https://localhost:44393/api/Test",
       {
@@ -129,11 +130,13 @@ function TestScreen() {
               <Form.Label>Subject ID</Form.Label>
               <Form.Select aria-label="Default select example" name="subjectId">
                 {subjects.map((subject) => (
-                  <option value={subject.id}>{subject.name}</option>
+                  <option key={subject.id} value={subject.id}>
+                    {subject.name}
+                  </option>
                 ))}
               </Form.Select>
             </Form.Group>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmltype="submit">
               Submit
             </Button>
           </Form>

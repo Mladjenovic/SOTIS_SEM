@@ -12,6 +12,7 @@ function TestDetailScreen({ match }) {
   const [checked, setChecked] = useState(false);
   const [selectedSection, setSelectedSection] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
+  const [problemsRelatedToSubject, setProblemsRelatedToSubject] = useState([]);
 
   const [show, setShow] = useState(false);
   const [showAddNewSection, setShowAddNewSection] = useState(false);
@@ -41,9 +42,17 @@ function TestDetailScreen({ match }) {
     console.log(data);
   }
 
+  async function fetchProblemsRelatedToSubject(subjectId) {
+    const { data } = await axios.get(
+      `https://localhost:44393/api/Problem/ProblemRelatedToSubject/${match.params.id}`
+    );
+    setProblemsRelatedToSubject(data);
+  }
+
   // Section handles
   const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleShow = (subjectId) => {
+    fetchProblemsRelatedToSubject(subjectId);
     setShow(true);
   };
 
@@ -131,6 +140,7 @@ function TestDetailScreen({ match }) {
         text: event.target.elements.text.value,
         pointsPerQuestion: event.target.elements.pointsPerQuestion.value,
         sectionId: selectedSection,
+        problemId: event.target.elements.problemsForQuestion.value,
       },
       config
     );
@@ -181,6 +191,10 @@ function TestDetailScreen({ match }) {
             <td>{test.description}</td>
           </tr>
           <tr>
+            <td>Subject id</td>
+            <td>{test.subjectId}</td>
+          </tr>
+          <tr>
             <td>Profesor id</td>
             <td>{test.profesorId}</td>
           </tr>
@@ -188,7 +202,10 @@ function TestDetailScreen({ match }) {
           <tr>
             <td>Sections</td>
             <td>
-              <Button style={{ marginRight: 5 }} onClick={handleShow}>
+              <Button
+                style={{ marginRight: 5 }}
+                onClick={() => handleShow(test.subjectId)}
+              >
                 View All
               </Button>
               {userInfo && userInfo.UserType != "Student" ? (
@@ -356,6 +373,20 @@ function TestDetailScreen({ match }) {
                 name="pointsPerQuestion"
                 required
               />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Problem for question</Form.Label>
+
+              <Form.Select
+                aria-label="Problems for Question"
+                name="problemsForQuestion"
+              >
+                {problemsRelatedToSubject.map((problem) => (
+                  <option key={problem.id} value={problem.id}>
+                    {problem.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
 
             <Button type="primary" htmltype="submit">
