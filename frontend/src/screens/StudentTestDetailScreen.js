@@ -11,6 +11,14 @@ function StudentTestDetailScreen({ match }) {
     []
   );
 
+
+  async function fetchQuestionsRelatedToSection(sectionId) {
+    const { data } = await axios.get(
+      `https://localhost:44393/api/Question/QuestionsRealtedToSection/${sectionId}`
+    );
+    setQuestionsRelatedToSection(data);
+  }
+
   useEffect(() => {
     async function fetchTest() {
       const { data } = await axios.get(
@@ -28,15 +36,16 @@ function StudentTestDetailScreen({ match }) {
     }
     fetchSectionsRealtedToTest();
 
-    async function fetchQuestionsRelatedToSection(sectionId) {
-      const { data } = await axios.get(
-        `https://localhost:44393/api/Question/QuestionsRealtedToSection/${sectionId}`
-      );
-      setQuestionsRelatedToSection(data);
-    }
+  
 
     fetchQuestionsRelatedToSection();
   }, []);
+
+  const printdesired = () => {
+    console.log(sectionsRelatedToTest);
+    fetchQuestionsRelatedToSection(sectionsRelatedToTest[0].id);
+    console.log(questionsRelatedToSection)
+  }
 
   const questions = [
     {
@@ -133,6 +142,7 @@ function StudentTestDetailScreen({ match }) {
                   )
                 )}
               </div>
+              <button  className="test-button" onClick={printdesired}>print desired</button>
             </>
           )}
         </div>
