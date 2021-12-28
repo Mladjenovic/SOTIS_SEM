@@ -19,6 +19,14 @@ def default_example():
         response = iita(data_frame, v=1)
         print("\n--------------------------------\n", response, "\n--------------------------------\n")
         return pd.Series(response).to_json(orient='values')
+      
+
+@app.route('/products', methods=['GET'])
+def products():
+  if request.method == 'GET':
+    products = [{"id": "1", "name": "name"}, {"id": "2", "name": "name2"}]
+    return json.dumps(products)
+
 
 
 if __name__ == "__main__":
