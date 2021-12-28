@@ -33,6 +33,7 @@ namespace backend
         {
 
             services.AddControllers();
+            services.AddHttpClient();
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IProfesorRepository, ProfesorRepository>();
